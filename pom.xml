@@ -17,6 +17,14 @@
         <httpclient.version>4.3.1</httpclient.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>bigzhao</id>
+            <url>https://raw.githubusercontent.com/l741589/repo/master</url>
+        </repository>
+    </repositories>
+
+
     <dependencies>
         <dependency> <!-- junit 4.7 -->
             <groupId>junit</groupId>
@@ -179,5 +187,5 @@
             </plugin>
         </plugins>
     </build>
-    
+
 </project>

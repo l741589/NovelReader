@@ -6,25 +6,28 @@
 
 // string
 Object.defineProperties(String.prototype, {
-    trim: {
+    __trim: {
         enumerable: false,
+        writable:false,
         value: function () {
             return this.replace(/(^\s*)|(\s*$)/g, "");
         }
     },
-    ltrim: {
+    __ltrim: {
         enumerable: false,
+        writable:false,
         value: function () {
             return this.replace(/(^\s*)/g, "");
         }
     },
-    rtrim: {
+    __rtrim: {
         enumerable: false,
+        writable:false,
         value: function () {
             return this.replace(/(\s*$)/g, "");
         }
     },
-    endWith: {
+    __endWith: {
         enumerable: false,
         value: function (str) {
             if (str == null || str == "" || this.length == 0 || str.length > this.length)return false;
@@ -33,7 +36,7 @@ Object.defineProperties(String.prototype, {
             return true;
         }
     },
-    byteLength: {
+    __byteLength: {
         enumerable: false,
         value: function () {
             var len = 0;
@@ -45,7 +48,7 @@ Object.defineProperties(String.prototype, {
             return len;
         }
     },
-    startWith: {
+    __startWith: {
         enumerable: false,
         value: function (str) {
             if (str == null || str == "" || this.length == 0 || str.length > this.length) return false;
@@ -54,7 +57,7 @@ Object.defineProperties(String.prototype, {
             return true;
         }
     },
-    format: {
+    __format: {
         enumerable: false,
         value: function (args, callbacks) {
             return this.replace(/\\\{|{((?:[_\$a-zA-Z][\w\.]*)|(?:[\d\.]+)|\*)(?::(-?\d+))?}/g, function (ori, cap, width) {

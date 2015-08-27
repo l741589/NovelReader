@@ -1,16 +1,18 @@
 /**
  * Created by Roy on 15-8-22.
  */
-$.load("lib.js");
+//$.load("lib.js");
 $.http.proxy("localhost",8888);
+String.prototype.__trim=function(){
 
+}
 function search(args){
     var url="http://4g.if.qidian.com/Atom.axd/Api/Search/GetBookStore?key="+args.keyword;
     if (args.page==null) url+="&type=0";
     else url+="&pageIndex="+args.page;
     var o= $.http.get(url).exec().json("utf-8");
     return{
-        page:"/page/test.jsp",
+        page:"/page/search.jsp",
         data: o.Data
     }
 }

@@ -58,7 +58,7 @@ public class JsDelegate {
         return Engine.jsToJava(Engine.call(func, args));
     }
 
-    @RequestMapping("reset.do")
+    @RequestMapping("/reset.do")
     public @ResponseBody String reset(HttpServletRequest req,HttpServletResponse res){
         Engine.exit();
         return "{code:'success'}";
