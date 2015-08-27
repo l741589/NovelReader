@@ -16,13 +16,12 @@
     input{
         border:black 4px solid;
     }
-    ul{
+    ul,li{
         list-style-type:none;
         margin: 0;
         padding: 0;
     }
-    li{
-        list-style-type:none;
+    p {
         margin: 0;
         padding: 0;
     }
