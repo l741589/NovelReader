@@ -8,6 +8,7 @@ import org.mozilla.javascript.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,7 +30,7 @@ public class JsDelegate {
     @Autowired Util util;
 
     @RequestMapping("/js/{method}.do")
-    public ModelAndView search(HttpServletRequest req,HttpServletResponse res,@PathVariable() String method){
+    public ModelAndView page(HttpServletRequest req,HttpServletResponse res,@PathVariable() String method){
         Engine.scope(util.getSid(req,res));
         Object obj=call(method, Engine.javaToJs(req.getParameterMap()));
         JSONObject json=(JSONObject)JSON.toJSON(obj);
@@ -50,6 +51,22 @@ public class JsDelegate {
             mv.addObject("data",data.toString());
         }
         return mv;
+    }
+
+    @RequestMapping(value="/js/ajax/{method}.do",produces={"application/json;charset=UTF-8"})
+    public @ResponseBody String ajax(HttpServletRequest req,HttpServletResponse res,@PathVariable() String method){
+        Engine.scope(util.getSid(req, res));
+        Object obj=call(method, Engine.javaToJs(req.getParameterMap()));
+        JSONObject json=(JSONObject)JSON.toJSON(obj);
+        return json.get("data").toString();
+    }
+
+    @RequestMapping(value="/js/ajaxraw/{method}.do",produces={"application/json;charset=UTF-8"})
+    public @ResponseBody String ajaxraw(HttpServletRequest req,HttpServletResponse res,@PathVariable() String method){
+        Engine.scope(util.getSid(req,res));
+        Object obj=call(method, Engine.javaToJs(req.getParameterMap()));
+        JSONObject json=(JSONObject)JSON.toJSON(obj);
+        return json.toString();
     }
 
     public Object call(String func,Object...args){

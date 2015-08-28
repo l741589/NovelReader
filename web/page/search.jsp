@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Roy
@@ -10,12 +11,13 @@
 <head>
     <title>Z读</title>
     <meta name="viewport" content="width=640"/>
+    <script src="/js/jquery-2.1.4.min.js"></script>
     <%@ include file="/page/style.jsp"%>
 </head>
 <body>
-<style>
+    <style type="text/css" scoped>
     .bookitem{
-        height:96px;
+        height:112px;
         width:100%;
     }
     .bookitem table{
@@ -68,39 +70,46 @@
         width: 100%;
         text-overflow: ellipsis;
     }
-</style>
-<table class="root" style="width: 90%;margin: 0 auto">
-    <tr style="height: 64px">
 
-    </tr>
-    <tr style="height: 48px">
-        <td>
-            <input id="search" placeholder="输入想要搜索的关键字" style="height: 48px;width: 100%"/>
-        </td>
-    </tr>
-    <tr >
-        <td>
-            <ul>
-                <li class="bookitem">
-                    <table cellpadding="0" cellspacing="0">
-                        <tr class=".l1" height="32px">
-                            <td rowspan="2" class="img">
-                                <img src="http://image.cmfu.com/Books/3467820/3467820.jpg"/>
-                            </td>
-                            <td class="title">标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题</td>
-                            <td class="author">作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者作者</td>
-                        </tr>
-                        <tr class=".12">
-                            <td colspan="2" class="desc" height="64px"><p>详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细详细</p></td>
-                        </tr>
-                    </table>
-                </li>
-            </ul>
-        </td>
-    </tr>
-    <tr style="height:48px;">
-        <td></td>
-    </tr>
-</table>
+        #pager input{
+            height:100%;
+            width:100%;
+        }
+    </style>
+
+    <table class="root" style="width: 90%;margin: 0 auto">
+        <tr style="height: 64px">
+
+        </tr>
+        <tr style="height: 48px">
+            <td colspan="2">
+                <input id="search" placeholder="输入想要搜索的关键字" style="height: 48px;width: 100%;font-size: 24px"/>
+            </td>
+        </tr>
+        <tr >
+            <td colspan="2">
+                <ul class="match_parent" id="list" itemheight="112">
+
+                </ul>
+            </td>
+        </tr>
+        <tr style="height:48px;" id="pager">
+            <td><input type="button" value="上一页" class="prev"/></td>
+            <td><input type="button" value="下一页" class="next"/></td>
+        </tr>
+    </table>
+    <script src="/js/ListManager.js"></script>
+    <script>
+        $(document).ready(function(){
+            var lm=new ListManager(${data},"/piece/search_list_item.html",function(node,d){
+                node.find(".desc p").text(d.Description);
+                node.find(".author").text(d.Author);
+                node.find(".title").text(d.BookName);
+                node.find("img").attr("src","http://image.cmfu.com/Books/"+ d.BookId+"/"+ d.BookId+".jpg");
+                node.find("img").attr("onerror","this.src='http://image.cmfu.com/Books/1.jpg'");
+            });
+            lm.autoAppend(window.location.href.replace("/js","/js/ajax")+"&page=");
+        });
+    </script>
 </body>
 </html>

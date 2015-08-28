@@ -15,6 +15,11 @@
     }
     input{
         border:black 4px solid;
+        background-color: white;
+    }
+    input[type=button]:active{
+        background-color: black;
+        color:white;
     }
     ul,li{
         list-style-type:none;
