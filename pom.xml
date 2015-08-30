@@ -140,7 +140,7 @@
         <dependency>
             <groupId>com.bigzhao</groupId>
             <artifactId>JsExe</artifactId>
-            <version>1.0.6-SNAPSHOT</version>
+            <version>1.0.8-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -154,6 +154,7 @@
             <artifactId>commons-collections</artifactId>
             <version>3.2.1</version>
         </dependency>
+
     </dependencies>
 
     <build>

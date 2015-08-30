@@ -12,7 +12,7 @@
     <title>Z读</title>
     <meta name="viewport" content="width=640"/>
     <script src="/js/jquery-2.1.4.min.js"></script>
-    <%@ include file="/page/style.jsp"%>
+    <%@ include file="/piece/style.jsp"%>
 </head>
 <body>
     <style type="text/css" scoped>
@@ -26,7 +26,7 @@
         width:100%;
         padding-top: 8px;
         padding-bottom: 8px;
-        border-top:black 1px solid;
+        border-bottom:black 1px solid;
     }
     .bookitem table td{
         padding: 0;
@@ -70,32 +70,36 @@
         width: 100%;
         text-overflow: ellipsis;
     }
-
-        #pager input{
-            height:100%;
-            width:100%;
-        }
     </style>
 
     <table class="root" style="width: 90%;margin: 0 auto">
-        <tr style="height: 64px">
+        <tr style="height: 48px">
 
         </tr>
-        <tr style="height: 48px">
-            <td colspan="2">
-                <input id="search" placeholder="输入想要搜索的关键字" style="height: 48px;width: 100%;font-size: 24px"/>
+        <tr style="height: 64px">
+            <td>
+                <form class="match_parent">
+                <table class="match_parent" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="80%"><input name="keyword" id="searchbox" placeholder="输入想要搜索的关键字" class="match_parent" style="font-size: 24px;border-right-width: 0;"/></td>
+                        <td width="20%"><input id="search" type="submit" value="搜索" class="match_parent" style="font-size: 24px"/></td>
+                    </tr>
+                </table>
+                </form>
             </td>
         </tr>
         <tr >
-            <td colspan="2">
+            <td>
+
                 <ul class="match_parent" id="list" itemheight="112">
 
                 </ul>
             </td>
         </tr>
-        <tr style="height:48px;" id="pager">
-            <td><input type="button" value="上一页" class="prev"/></td>
-            <td><input type="button" value="下一页" class="next"/></td>
+        <tr style="height:64px;">
+            <td>
+                <%@ include file="/piece/pager.jsp"%>
+            </td>
         </tr>
     </table>
     <script src="/js/ListManager.js"></script>
@@ -105,10 +109,13 @@
                 node.find(".desc p").text(d.Description);
                 node.find(".author").text(d.Author);
                 node.find(".title").text(d.BookName);
-                node.find("img").attr("src","http://image.cmfu.com/Books/"+ d.BookId+"/"+ d.BookId+".jpg");
+                node.find("img").attr("src","http://4g.if.qidian.com/Atom.axd/Api/Book/GetCover?bookId="+d.BookId);
                 node.find("img").attr("onerror","this.src='http://image.cmfu.com/Books/1.jpg'");
+                node.mousedown(function(){window.location.href="/js/content.do?BookId="+ d.BookId});
             });
             lm.autoAppend(window.location.href.replace("/js","/js/ajax")+"&page=");
+
+            $("#searchbox").val("${param.keyword}")
         });
     </script>
 </body>
