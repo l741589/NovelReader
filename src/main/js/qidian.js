@@ -2,7 +2,7 @@
  * Created by Roy on 15-8-22.
  */
 //$.load("lib.js");
-$.load("MLogin.js");
+$.load("ZLogin.js");
 $.http.proxy("localhost",8888);
 String.prototype.__trim=function(){
 
@@ -49,12 +49,39 @@ function chapter(args){
     }
 }
 
-function login(args){
-    var data;
-    MLogin.onComplete=function(){
-        data= $.http.cookie();
-    };
-    MLogin.StaticLogin.Login(args.id.toString(),args.pw.toString());
-
+function loginError(data){
+    data.error={
+        "message":data.error["message"],
+        "fileName":data.error["fileName"],
+        "lineNumber":data.error["lineNumber"],
+        "stack":data.error["stack"],
+        "rhinoException":data.error["rhinoException"]
+    }
     return {data:data}
+}
+
+function login(args){
+    try {
+        var data = ZLogin.Login(args.id.toString(), args.pw.toString());
+        if (data.return_code == -1111) return loginError(data);
+        var s=data.data.checkCodeUrl;
+        $.log(s);
+        if (data.return_code == 8) return { redirect:"/js/checkCodeLogin.do?url="+encodeURIComponent(s),data:data};
+        return data
+    }catch(e){
+        if (data.return_code == -1111) return loginError({error:e});
+    }
+}
+
+function checkCodeLogin(args){
+    if (args.code==null){
+        return {
+            page:"/page/checkCode.jsp"
+        }
+    }else{
+        return {
+            page: "/"
+
+        }
+    }
 }

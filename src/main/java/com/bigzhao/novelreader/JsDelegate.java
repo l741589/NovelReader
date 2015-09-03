@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.stream.StreamSupport;
@@ -34,21 +35,24 @@ public class JsDelegate {
         Engine.scope(util.getSid(req,res));
         Object obj=call(method, Engine.javaToJs(req.getParameterMap()));
         JSONObject json=(JSONObject)JSON.toJSON(obj);
+        if (tryRedirect(json,res)) return null;
         ModelAndView mv=new ModelAndView(json.getString("page"));
         String charset=json.getString("charset");
         if (charset==null) charset="utf-8";
         mv.addObject("charset",charset);
         Object data=json.get("data");
-        if (data instanceof JSONArray){
-            mv.addObject("data",data.toString());
-        }else if (data instanceof JSONObject){
-            JSONObject j=(JSONObject)data;
-            JSONArray a=new JSONArray();
-            for (String key:j.keySet()) a.add(key);
-            mv.addObject("data", j.toString());
-            mv.addAllObjects(j);
-        }else{
-            mv.addObject("data",data.toString());
+        if (data!=null) {
+            if (data instanceof JSONArray) {
+                mv.addObject("data", data.toString());
+            } else if (data instanceof JSONObject) {
+                JSONObject j = (JSONObject) data;
+                JSONArray a = new JSONArray();
+                for (String key : j.keySet()) a.add(key);
+                mv.addObject("data", j.toString());
+                mv.addAllObjects(j);
+            } else {
+                mv.addObject("data", data.toString());
+            }
         }
         return mv;
     }
@@ -58,7 +62,20 @@ public class JsDelegate {
         Engine.scope(util.getSid(req, res));
         Object obj=call(method, Engine.javaToJs(req.getParameterMap()));
         JSONObject json=(JSONObject)JSON.toJSON(obj);
+        if (tryRedirect(json,res)) return null;
         return json.get("data").toString();
+    }
+
+    private boolean tryRedirect(JSONObject json,HttpServletResponse res){
+        if (json.getString("redirect")!=null) {
+            try {
+                res.sendRedirect(json.getString("redirect"));
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 
     @RequestMapping(value="/js/ajaxraw/{method}.do",produces={"application/json;charset=UTF-8"})

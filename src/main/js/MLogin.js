@@ -84,6 +84,10 @@ var MLogin =
         ShowError : function (a)
         {
             $.log(a);
+        },
+        ResetLoading : function ()
+        {
+            $.log("reset loading");
         }
     },
     CheckCodeLogin :
@@ -770,6 +774,7 @@ var MLogin =
     },
     LoginCallBack : function (a)
     {
+        a= a.replace(/^\w+\((.*)\)$/,"$1");
         if (!a)
         {
             MLogin.ShowErrorMessage("login fail!unkown error!");
@@ -878,7 +883,7 @@ var MLogin =
                         }
                         else
                         {
-                            MLogin.ShowErrorMessage("系统错误！" + a.return_code)
+                            MLogin.ShowErrorMessage("System Error！" + a.return_code)
                         }
                         break;
                     case -10515903:
