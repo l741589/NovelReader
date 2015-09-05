@@ -30,36 +30,75 @@ function content(args){
 }
 
 function chapter(args){
+    function getRd(){
+        var a = ($.http.cookie("rc") || "1") + ($.http.cookie("rf") || "18") + ($.http.cookie("mrm") || "2") + "1";
+        return a
+    }
     var url= $.format("http://3g.qidian.com/ajax/reader.ashx?ajaxMethod=getchapterinfonew&bookid=%s&chapterid=%s",args.bid.toString(),args.cid.toString());
     var o= $.http.get(url).exec().json("utf-8");
-    if ((o.ReturnCode==1|| o.ReturnCode==100)&& o.ReturnObject.length>=2){
-        var b=o.ReturnObject[0];
-        var c=o.ReturnObject[1];
+    if (o.ReturnCode==1|| o.ReturnCode==100|| o.ReturnCode==-108) {
+        var b = null;
+        var c = null;
+        if (o.ReturnObject.length >= 2) {
+            b = o.ReturnObject[0];
+            c = o.ReturnObject[1];
+        } else {
+            c = o.ReturnObject;
+        }
+        if ((c.Content==null|| c.Content=="")&&c.MaxPageIndex>0) {
+            var ct=""
+            for (var i = 1; i <= c.MaxPageIndex;++i) {
+                var a = $.format("http://vipimage.qidian.com/BookReader/ChapterImageM.aspx?bookid=%s&chapterid=%s&width=%d&page=%d&rd=%s",
+                    args.bid.toString(), args.cid.toString(), 576, i, getRd());
+                ct += $.format('<img src="%s"/><br/>',a)
+            }
+            c.Content=ct;
+        }
         return {
-            page:"/page/chapter.jsp",
+            page: "/page/chapter.jsp",
             data: {
-                bookname: b.BookName,
-                author: b.AuthorName,
+                bookname: b ? b.BookName : "",
+                author: b ? b.AuthorName : "",
                 title: c.ChapterName,
-                text: c.Content.replace(/\[\[\[CP[^\]]*?U:([^\]\|]+)[^\]]*\]\]\]/g,"\r\n<img src='$1'>"),
+                text: c.Content ? c.Content.replace(/\[\[\[CP[^\]]*?U:([^\]\|]+)[^\]]*\]\]\]/g, "\r\n<img src='$1'>") : null,
                 prev: c.PreChapterId,
-                next: c.NextChapterId
+                next: c.NextChapterId,
+                price: c.Price,
+                needBuy: o.ReturnCode == -108
             }
         }
-    }else{
+
+    }else {
         return null;
     }
 }
 
-function loginError(data){
-    data.error={
-        "message":data.error["message"],
-        "fileName":data.error["fileName"],
-        "lineNumber":data.error["lineNumber"],
-        "stack":data.error["stack"],
-        "rhinoException":data.error["rhinoException"]
+function buyChapter(args){
+    try {
+        var d = $.http.post("http://3g.qidian.com/ajax/buychapter.ashx",{
+            ajaxMethod:"buychapter",
+            bookid:args.bid.toString(),
+            chapterid:args.cid.toString()
+        }).exec().json();
+        return {data: {code: d.IsSuccess?"0":"-1",msg: d.ReturnString}}
+    }catch(e){
+        return{
+            data:{
+                ReturnCode:-1111,
+                error:e
+            }
+        }
     }
-    return {data:data}
+}
+
+function loginError(e){
+    return {
+        "message":e["message"],
+        "fileName":e["fileName"],
+        "lineNumber":e["lineNumber"],
+        "stack":e["stack"],
+        "rhinoException":e["rhinoException"]
+    }
 }
 
 function login(args){
@@ -85,7 +124,7 @@ function login(args){
             }
         }
     }catch(e){
-        return {data:{code:-1111,msg:"服务器错误"}}
+        return {data:{code:-1111 ,error:loginError(e), msg:"服务器错误"}}
     }
 }
 
@@ -112,7 +151,7 @@ function checkCodeLogin(args){
             }
         }
     }catch(e){
-        if (data.return_code == -1111)  return {data:{code:-1111,msg:"服务器错误"}}
+        return {data:{code:-1111,error:loginError(e),msg:"服务器错误"}}
     }
 }
 

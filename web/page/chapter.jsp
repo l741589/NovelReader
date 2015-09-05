@@ -11,6 +11,7 @@
     <%@ include file="/piece/meta.jsp"%>
     <title>${title}-${bookname}-${author}|Z读</title>
     <%@include file="/piece/style.jsp"%>
+    <script src="/js/jquery-2.1.4.min.js"></script>
 </head>
 <body style="width: 90%;margin: 0 auto">
     <style scoped>
@@ -48,8 +49,14 @@
                 word-wrap: break-word;
                 white-space: pre-wrap;
             }
+            #buy{
+                height: 48px;
+                width: 100%;
+                font-size: 20px;;
+            }
         </style>
-        <pre style="width: 100%">${text}</pre>
+        <pre id="content" style="width: 100%">${text}</pre>
+        <input id="buy" type="button" value="购买" class="hide"/>
     </div>
     <div class="nav">
         <a class="input" style="width: 33%;left: 0" href="?bid=${param.bid}&cid=${prev}">上一章</a>
@@ -65,7 +72,24 @@
             console.log("per:"+per);
             if (per<0.01) document.getElementById("smalltitle").className="hide";
             else document.getElementById("smalltitle").className="";
-        }
+        };
+        $(document).ready(function(){
+            if (${needBuy}){
+                $("#content").text("还未订阅当前章节，需要花费${price}起点币");
+                var p=$("#buy");
+                p.removeClass("hide");
+                p.mousedown(function(){
+                    $.get("/js/ajax/buyChapter.do?bid=${param.bid}&cid=${param.cid}",function(d){
+                        console.log(d);
+                        if (d.code==0){
+                            window.location.reload();
+                        }else{
+                            p.val("订阅失败，点击重试");
+                        }
+                    });
+                });
+            }
+        });
     </script>
 </body>
 </html>

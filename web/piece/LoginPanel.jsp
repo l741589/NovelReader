@@ -24,19 +24,12 @@
         border-radius: 4px;
         background-color: white;
     }
-
-    #LoginPanel[status="0"] .cc{
-        display: none;
-    }
-    #LoginPanel[status="1"] .id,#LoginPanel[status="1"] .pw{
-        display: none;
-    }
 </style>
 <span id="LoginPanelEntry">点击登录</span>
 <table id="LoginPanelMask" class="hide">
     <tr>
         <td style="text-align: center">
-            <table id="LoginPanel" status="0">
+            <table id="LoginPanel">
                 <tr class="title">
                     <td>登录起点</td>
                 </tr>
@@ -53,7 +46,10 @@
                     <td><input placeholder="验证码"></td>
                 </tr>
                 <tr class="submit" style="text-align: center">
-                    <td><input type="button" value="登录"></td>
+                    <td>
+                        <input class="login" type="button" value="登录">
+                        <input class="cancel"type="button" value="取消">
+                    </td>
                 </tr>
             </table>
         </td>
@@ -63,22 +59,45 @@
     $(document).ready(function () {
         var p=$("#LoginPanel");
 
+        function setStatus(status){
+            p.attr("status",status);
+            if (status==0){
+                p.find(".cc").addClass("hide");
+                p.find(".pw").removeClass("hide");
+                p.find(".id").removeClass("hide");
+                p.find(".title td").text("登录起点");
+            }else{
+                p.find(".cc").removeClass("hide");
+                p.find(".pw").addClass("hide");
+                p.find(".id").addClass("hide");
+                p.find(".title td").text("请输入验证码");
+            }
+        }
+
+        setStatus(0);
+
         function handleResponse(d){
             p.removeAttr("disabled");
             if (d.code==0){
                 window.location.reload();
-                p.attr("status",0);
+                p.addClass("hide");
+                setStatus(0);
             }else if (d.code==8){
-                p.attr("status",1);
+                setStatus(1);
                 p.find(".cc img").attr("src", d.url+"&x="+Math.random())
             }else{
+                setStatus(0);
                 p.find(".title td").text(d.msg);
-                p.attr("status",0);
+
             }
 
         }
+        p.find(".submit input.cancel").mousedown(function(){
+            $("#LoginPanelMask").addClass("hide");
+            setStatus(0);
+        });
 
-        p.find(".submit input").click(function(){
+        p.find(".submit input.login").mousedown(function(){
             if (p.attr("status")=="0"){
                 $.post("/js/ajax/login.do",{
                     id: p.find(".id input").val(),
@@ -90,11 +109,11 @@
                     code: p.find(".cc input").val()
                 },handleResponse);
             }
-        })
+        });
 
-        $("#LoginPanelEntry").click(function(){
+        $("#LoginPanelEntry").mousedown(function(){
             $("#LoginPanelMask").removeClass("hide");
-        })
+        });
 
         $.get("/js/ajax/getUserInfo.do",function(d){
             $("#LoginPanelEntry").text(d.IsSuccess? d.ReturnString:"点击登录");

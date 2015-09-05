@@ -74,7 +74,9 @@
 
     <table class="root" style="width: 90%;margin: 0 auto">
         <tr style="height: 48px">
-
+            <td>
+                <%@include file="/piece/LoginPanel.jsp"%>
+            </td>
         </tr>
         <tr style="height: 64px">
             <td>

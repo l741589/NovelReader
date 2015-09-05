@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bigzhao.jsexe.engine.Engine;
+import com.bigzhao.jsexe.engine.net.HttpHelper;
 import com.bigzhao.jsexe.util.L;
 import org.mozilla.javascript.Context;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,6 +108,7 @@ public class JsDelegate {
     @RequestMapping("/reset.do")
     public @ResponseBody String reset(HttpServletRequest req,HttpServletResponse res){
         Engine.exit();
+        HttpHelper.reset();
         return "{code:'success'}";
     }
 }
