@@ -22,8 +22,10 @@ public class Util {
 
     public String getSid(HttpServletRequest req,HttpServletResponse res){
         Cookie[] cs=req.getCookies();
-        for (Cookie c:cs){
-            if ("z_sid".equals(c.getName())) return c.getValue();
+        if (cs!=null) {
+            for (Cookie c : cs) {
+                if ("z_sid".equals(c.getName())) return c.getValue();
+            }
         }
         String sid=req.getSession().getId();
         addCookie(res,"z_sid",sid);

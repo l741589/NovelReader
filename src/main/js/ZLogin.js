@@ -1,7 +1,6 @@
 /**
  * Created by Roy on 15-9-3.
  */
-var AjaxDomainUrl = "http://acs.qidian.com";
 var ZLogin =
 {
     EndPointType: 4,
@@ -21,61 +20,59 @@ var ZLogin =
         ReturnUrl: "http://3g.qidian.com/profile/index.aspx?returnurl=http://3g.qidian.com/",
         IsOutSite: 0
     },
-    AjaxUrl: {
-        StaticUrl: "http://acs.qidian.com/authen/staticLogin.ashx",
-        AutoUrl: AjaxDomainUrl + "/authen/AutoLogin.ashx",
-        CheckCodeUrl: AjaxDomainUrl + "/authen/checkcodelogin.ashx",
-        LogoutUrl: AjaxDomainUrl + "/authen/logout.ashx",
-        DynamicUrl: AjaxDomainUrl + "/authen/dynamicLogin.ashx",
-        SinaLoginUrl: AjaxDomainUrl + "/Login/Sina/login.ashx",
-        AlipayLoginUrl: AjaxDomainUrl + "/Login/Alipay/login.ashx",
-        QQLoginUrl: AjaxDomainUrl + "/Login/QQ/login.ashx",
-        BaiduLoginUrl: AjaxDomainUrl + "/Login/Baidu/login.ashx",
-        CheckSdoTicketUrl: AjaxDomainUrl + "/Register/CheckSDOTicket.ashx",
-        SendPhoneUrl: AjaxDomainUrl + "/authen/SendPhoneCheckCodeNew.ashx",
-        PhoneLoginUrl: AjaxDomainUrl + "/authen/phoneCheckCodeLogin.ashx",
-        CheckPhoneUrl: AjaxDomainUrl + "/authen/checkAccountType.ashx"
-    },
     Login: function (username, password) {
         try {
-            var d=$.http.get("http://acs.qidian.com/authen/staticLogin.ashx", {
-                appId: ZLogin.Config.MAppId,
-                areaId: ZLogin.Config.MAreaId,
-                serviceurl: ZLogin.Config.ReturnUrl,
-                frametype: 3,
-                endpointos: ZLogin.EndPointType,
-                format: "jsonp",
-                inputuserid: username,
-                password: password,
-                autologinflag: 0,
-                autologinkeeptime: ZLogin.Config.AutoDays
-            }).exec().body()+"";
+            var d = $.http.get("http://acs.qidian.com/authen/staticLogin.ashx", {
+                    appId: ZLogin.Config.MAppId,
+                    areaId: ZLogin.Config.MAreaId,
+                    serviceurl: ZLogin.Config.ReturnUrl,
+                    frametype: 3,
+                    endpointos: ZLogin.EndPointType,
+                    format: "jsonp",
+                    inputuserid: username,
+                    password: password,
+                    autologinflag: 0,
+                    autologinkeeptime: ZLogin.Config.AutoDays
+                }).exec().body() + "";
             return ZLogin.LoginCallBack(d)
         } catch (e) {
             return {"return_code": -1111, msg: "exeption occured", error: e}
         }
     },
+    CheckCodeLogin: function (code) {
+        if (code == null || code.length <= 0) {
+            return {return_code: 1, msg: "pleage input checkcode"}
+        }
+        var d = $.http.get("http://acs.qidian.com/authen/checkcodelogin.ashx", {
+            appId: ZLogin.Config.MAppId,
+            areaId: ZLogin.Config.MAreaId,
+            serviceurl: ZLogin.Config.ReturnUrl,
+            frametype: 3,
+            endpointos: ZLogin.EndPointType,
+            format: "jsonp",
+            guid: ZLogin.Config.GUID,
+            password: code
+        }).exec().body()+"";
+        return ZLogin.LoginCallBack(d);
+    },
     LoginCallBack: function (a) {
         //$.log(a);
         a = JSON.parse(a.replace(/^\w+\((.*)\)$/, "$1"));
-        if (!a) return {"return_code": -1110, msg: "login fail!unkown error!"}
+        if (!a) return {"return_code": -1110, msg: "login fail!unkown error!"};
         if (a.return_code == 0 && a.data.nextAction == 0) {
-            if (ZLogin.Config.CurrentType == 6) ZLogin.LoginSuccess(a.data.ticket, (parseInt(ZLogin.Config.MAreaId) * 100 + 2))
-            else ZLogin.LoginSuccess(a.data.ticket, (parseInt(ZLogin.Config.MAreaId) * 100 + ZLogin.Config.FromLoginType))
+            if (ZLogin.Config.CurrentType == 6) return ZLogin.LoginSuccess(a.data.ticket, (parseInt(ZLogin.Config.MAreaId) * 100 + 2));
+            else return ZLogin.LoginSuccess(a.data.ticket, (parseInt(ZLogin.Config.MAreaId) * 100 + ZLogin.Config.FromLoginType))
         } else {
             if (a.data && a.data.nextAction) {
                 switch (a.data.nextAction) {
                     case 2:
                         ZLogin.Config.GUID = "";
-                        return {"return_code": 2, msg: "static login!", data: a.data}
-                        break;
+                        return {"return_code": 2, msg: "static login!", data: a.data};
                     case 8:
                         ZLogin.Config.GUID = a.data.guid;
-                        return {"return_code": 8, msg: "check code login!", data: a.data}
-                        break;
+                        return {"return_code": 8, msg: "check code login!", data: a.data};
                     default:
                         return {"return_code": a.data.nextAction, msg: a.return_message, data: a.data}
-                        break
                 }
             } else {
                 return a;
@@ -83,21 +80,22 @@ var ZLogin =
         }
     },
     LoginSuccess: function (c, b) {
+        var page;
         if (ZLogin.Config.IsOutSite) {
             var a = ZLogin.Config.ReturnUrl;
             if (a.indexOf("?") > -1) a += "&ticket=" + c
             else a += "?ticket=" + c;
-            var page=$.http.get(a);
-            return {"return_code":0,"data":page}
+            page = $.http.get(a).exec().body();
+            return {"return_code": 0, "data": page}
             //ZLogin.TopRedirect(a)
         } else {
             var a = ZLogin.Config.OAJumpUrl +
                 $.format("?appId=%s&sitetype=%s&returnURL=%s&ticket=%s&ticketType=1&loginfrom=%s",
                     ZLogin.Config.MAppId,
                     ZLogin.Config.MAreaId, encodeURIComponent(ZLogin.Config.ReturnUrl),
-                    c,b);
-            var page=$.http.get(a);
-            return {"return_code":0,"data":page}
+                    c, b);
+            page = $.http.get(a).exec().body();
+            return {"return_code": 0, "data": page}
         }
     }
 };

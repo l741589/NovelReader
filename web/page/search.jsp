@@ -10,7 +10,7 @@
 <html>
 <head>
     <title>Z读</title>
-    <meta name="viewport" content="width=640"/>
+    <%@ include file="/piece/meta.jsp"%>
     <script src="/js/jquery-2.1.4.min.js"></script>
     <%@ include file="/piece/style.jsp"%>
 </head>

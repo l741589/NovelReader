@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bigzhao.jsexe.engine.Engine;
+import com.bigzhao.jsexe.util.L;
 import org.mozilla.javascript.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.stream.StreamSupport;
 
@@ -33,7 +35,8 @@ public class JsDelegate {
     @RequestMapping("/js/{method}.do")
     public ModelAndView page(HttpServletRequest req,HttpServletResponse res,@PathVariable() String method){
         Engine.scope(util.getSid(req,res));
-        Object obj=call(method, Engine.javaToJs(req.getParameterMap()));
+        Object obj=call(res,method, Engine.javaToJs(req.getParameterMap()));
+
         JSONObject json=(JSONObject)JSON.toJSON(obj);
         if (tryRedirect(json,res)) return null;
         ModelAndView mv=new ModelAndView(json.getString("page"));
@@ -60,7 +63,7 @@ public class JsDelegate {
     @RequestMapping(value="/js/ajax/{method}.do",produces={"application/json;charset=UTF-8"})
     public @ResponseBody String ajax(HttpServletRequest req,HttpServletResponse res,@PathVariable() String method){
         Engine.scope(util.getSid(req, res));
-        Object obj=call(method, Engine.javaToJs(req.getParameterMap()));
+        Object obj=call(res,method, Engine.javaToJs(req.getParameterMap()));
         JSONObject json=(JSONObject)JSON.toJSON(obj);
         if (tryRedirect(json,res)) return null;
         return json.get("data").toString();
@@ -81,15 +84,24 @@ public class JsDelegate {
     @RequestMapping(value="/js/ajaxraw/{method}.do",produces={"application/json;charset=UTF-8"})
     public @ResponseBody String ajaxraw(HttpServletRequest req,HttpServletResponse res,@PathVariable() String method){
         Engine.scope(util.getSid(req,res));
-        Object obj=call(method, Engine.javaToJs(req.getParameterMap()));
+        Object obj=call(res,method, Engine.javaToJs(req.getParameterMap()));
         JSONObject json=(JSONObject)JSON.toJSON(obj);
         return json.toString();
     }
 
-    public Object call(String func,Object...args){
+    public Object call(HttpServletResponse res,String func,Object...args){
         URL url=Thread.currentThread().getContextClassLoader().getResource("qidian.js");
         Engine.load(url.getFile());
-        return Engine.jsToJava(Engine.call(func, args));
+        Object obj=Engine.jsToJava(Engine.call(func, args));
+        if (obj==null) {
+            try {
+                res.sendError(404);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        return obj;
     }
 
     @RequestMapping("/reset.do")

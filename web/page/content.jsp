@@ -8,6 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <%@ include file="/piece/meta.jsp"%>
     <title>${BookName}-${Author}|Z读</title>
     <%@include file="/piece/style.jsp"%>
     <script src="/js/jquery-2.1.4.min.js"></script>

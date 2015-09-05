@@ -8,6 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <%@ include file="/piece/meta.jsp"%>
     <title>大钊的主页</title>
     <script src="/js/jquery-2.1.4.min.js"></script>
     <link type="text/css" rel="stylesheet" href="/css/home.css"/>

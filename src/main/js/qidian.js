@@ -4,6 +4,8 @@
 //$.load("lib.js");
 $.load("ZLogin.js");
 $.http.proxy("localhost",8888);
+$.sysprop("file.encoding","utf-8");
+
 String.prototype.__trim=function(){
 
 };
@@ -30,7 +32,7 @@ function content(args){
 function chapter(args){
     var url= $.format("http://3g.qidian.com/ajax/reader.ashx?ajaxMethod=getchapterinfonew&bookid=%s&chapterid=%s",args.bid.toString(),args.cid.toString());
     var o= $.http.get(url).exec().json("utf-8");
-    if (o.ReturnCode==1&& o.ReturnObject.length>=2){
+    if ((o.ReturnCode==1|| o.ReturnCode==100)&& o.ReturnObject.length>=2){
         var b=o.ReturnObject[0];
         var c=o.ReturnObject[1];
         return {
@@ -62,26 +64,78 @@ function loginError(data){
 
 function login(args){
     try {
+        if (args.id==null) return {page:"/page/login.jsp"};
         var data = ZLogin.Login(args.id.toString(), args.pw.toString());
-        if (data.return_code == -1111) return loginError(data);
-        var s=data.data.checkCodeUrl;
-        $.log(s);
-        if (data.return_code == 8) return { redirect:"/js/checkCodeLogin.do?url="+encodeURIComponent(s),data:data};
-        return data
+        if (data.return_code == -1111) return {data:{code:-1111,msg:"服务器错误"}}
+        if (data.return_code == 8)  {
+            return {
+                data:{
+                    code:8,
+                    msg:"需要验证",
+                    url:data.data.checkCodeUrl,
+                    guid:ZLogin.Config.GUID
+                }
+            }
+        }else {
+            return {
+                data: {
+                    code: data.return_code,
+                    msg: data.return_message
+                }
+            }
+        }
     }catch(e){
-        if (data.return_code == -1111) return loginError({error:e});
+        return {data:{code:-1111,msg:"服务器错误"}}
     }
 }
 
 function checkCodeLogin(args){
-    if (args.code==null){
-        return {
-            page:"/page/checkCode.jsp"
+    try {
+        $.log(ZLogin.Config.GUID);
+        var data = ZLogin.CheckCodeLogin(args.code.toString());
+        if (data.return_code == -1111)  return {data:{code:-1111,msg:"服务器错误"}}
+        if (data.return_code == 8)  {
+            return {
+                data:{
+                    code:8,
+                    msg:"需要验证",
+                    url:data.data.checkCodeUrl,
+                    guid:ZLogin.Config.GUID
+                }
+            }
+        }else {
+            return {
+                data: {
+                    code: data.return_code,
+                    msg: data.return_message
+                }
+            }
         }
-    }else{
-        return {
-            page: "/"
+    }catch(e){
+        if (data.return_code == -1111)  return {data:{code:-1111,msg:"服务器错误"}}
+    }
+}
 
+function scope(){
+    return {
+        page:"/page/test.jsp",
+        data:{
+            sid:$.jsexe.getScopeId(),
+            sct: $.jsexe.getScopeCreateTime(),
+            tid: $.jsexe.getThreadId()
         }
     }
+}
+
+function getUserInfo(){
+    //IsSuccess
+    //ReturnString name
+    var ret=$.http.get("http://3g.qidian.com/ajax/userajax.ashx?ajaxMethod=checkuserlogin").exec().json("utf-8");
+    return {
+        data:ret
+    }
+}
+
+function ch(){
+    return{data:"这里是中文"}
 }
