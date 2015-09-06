@@ -2,9 +2,9 @@
  * Created by Roy on 15-8-22.
  */
 //$.load("lib.js");
-$.load("ZLogin.js");
+$.load("login.js");
+$.load("systest.js");
 $.http.proxy("localhost",8888);
-$.sysprop("file.encoding","utf-8");
 
 String.prototype.__trim=function(){
 
@@ -91,81 +91,6 @@ function buyChapter(args){
     }
 }
 
-function loginError(e){
-    return {
-        "message":e["message"],
-        "fileName":e["fileName"],
-        "lineNumber":e["lineNumber"],
-        "stack":e["stack"],
-        "rhinoException":e["rhinoException"]
-    }
-}
-
-function login(args){
-    try {
-        if (args.id==null) return {page:"/page/login.jsp"};
-        var data = ZLogin.Login(args.id.toString(), args.pw.toString());
-        if (data.return_code == -1111) return {data:{code:-1111,msg:"服务器错误"}}
-        if (data.return_code == 8)  {
-            return {
-                data:{
-                    code:8,
-                    msg:"需要验证",
-                    url:data.data.checkCodeUrl,
-                    guid:ZLogin.Config.GUID
-                }
-            }
-        }else {
-            return {
-                data: {
-                    code: data.return_code,
-                    msg: data.return_message
-                }
-            }
-        }
-    }catch(e){
-        return {data:{code:-1111 ,error:loginError(e), msg:"服务器错误"}}
-    }
-}
-
-function checkCodeLogin(args){
-    try {
-        $.log(ZLogin.Config.GUID);
-        var data = ZLogin.CheckCodeLogin(args.code.toString());
-        if (data.return_code == -1111)  return {data:{code:-1111,msg:"服务器错误"}}
-        if (data.return_code == 8)  {
-            return {
-                data:{
-                    code:8,
-                    msg:"需要验证",
-                    url:data.data.checkCodeUrl,
-                    guid:ZLogin.Config.GUID
-                }
-            }
-        }else {
-            return {
-                data: {
-                    code: data.return_code,
-                    msg: data.return_message
-                }
-            }
-        }
-    }catch(e){
-        return {data:{code:-1111,error:loginError(e),msg:"服务器错误"}}
-    }
-}
-
-function scope(){
-    return {
-        page:"/page/test.jsp",
-        data:{
-            sid:$.jsexe.getScopeId(),
-            sct: $.jsexe.getScopeCreateTime(),
-            tid: $.jsexe.getThreadId()
-        }
-    }
-}
-
 function getUserInfo(){
     //IsSuccess
     //ReturnString name
@@ -175,6 +100,11 @@ function getUserInfo(){
     }
 }
 
-function ch(){
-    return{data:"这里是中文"}
+function recent(){
+    return {
+        page:"/page/recent.jsp",
+        data:{
+            username:"abc"
+        }
+    }
 }

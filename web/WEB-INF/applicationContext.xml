@@ -26,5 +26,5 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-
+    <bean id="globalListener" class="com.bigzhao.novelreader.GlobalListener"/>
 </beans>

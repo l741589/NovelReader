@@ -7,6 +7,10 @@ import com.bigzhao.jsexe.engine.Engine;
 import com.bigzhao.jsexe.engine.net.HttpHelper;
 import com.bigzhao.jsexe.util.L;
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ast.Comment;
+import org.mozilla.javascript.ast.Scope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
@@ -36,8 +40,8 @@ public class JsDelegate {
     @RequestMapping("/js/{method}.do")
     public ModelAndView page(HttpServletRequest req,HttpServletResponse res,@PathVariable() String method){
         Engine.scope(util.getSid(req,res));
+        Scriptable s;
         Object obj=call(res,method, Engine.javaToJs(req.getParameterMap()));
-
         JSONObject json=(JSONObject)JSON.toJSON(obj);
         if (tryRedirect(json,res)) return null;
         ModelAndView mv=new ModelAndView(json.getString("page"));
@@ -71,6 +75,7 @@ public class JsDelegate {
     }
 
     private boolean tryRedirect(JSONObject json,HttpServletResponse res){
+        if (json==null) return false;
         if (json.getString("redirect")!=null) {
             try {
                 res.sendRedirect(json.getString("redirect"));
