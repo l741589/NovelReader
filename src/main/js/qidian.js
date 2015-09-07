@@ -6,6 +6,9 @@ $.load("login.js");
 $.load("systest.js");
 $.http.proxy("localhost",8888);
 
+$.log($.ext.jt());
+$.log($.ext.sf());
+
 String.prototype.__trim=function(){
 
 };
@@ -54,6 +57,17 @@ function chapter(args){
             }
             c.Content=ct;
         }
+        try{
+            if (b!=null) $.ext.db().update("book",b);
+            if (c!=null) $.ext.db().update("chapter",c);
+            if (o.ReturnObject[2]){
+                o.ReturnObject[2].forEach(function(c){
+                    if (c!=null) $.ext.db().update("chapter",c);
+                })
+            }
+        }catch(e){
+            $.log(e);
+        }
         return {
             page: "/page/chapter.jsp",
             data: {
@@ -95,6 +109,10 @@ function getUserInfo(){
     //IsSuccess
     //ReturnString name
     var ret=$.http.get("http://3g.qidian.com/ajax/userajax.ashx?ajaxMethod=checkuserlogin").exec().json("utf-8");
+    if (ret.IsSuccess) {
+        var c=$.http.cookie("cmfuToken");
+        $.ext.db().update("user",{username: $.util.md5(c) });
+    }
     return {
         data:ret
     }
