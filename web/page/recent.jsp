@@ -16,14 +16,17 @@
 <body style="position: fixed;left: 5%;width: 90%;height: 100%">
     <style scoped>
         #title{
-            font-size: 48px;
-            margin-top: 8px;
-            margin-bottom: 8px
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            font-size: 24px;
+            height: 48px;
+            line-height: 48px;
         }
         #list{
             position: absolute;
             bottom: 64px;
-            top: 64px;
+            top: 48px;
             width: 100%
         }
 
@@ -73,7 +76,7 @@
         $(document).ready(function(){
             var lm=new ListManager(${data},"/piece/recent_list_item.html",function(n,d){
                 n.mousedown(function(){
-                    window.location.href="/js/chapter.do?bid="+ d.bid+"&cid="+d,cid;
+                    window.location.href="/js/chapter.do?bid="+ d.bid+"&cid="+ d.cid;
                 });
                 n.find(".cname").text(d.cn);
                 n.find(".bname").text(d.bn);

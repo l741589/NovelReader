@@ -24,6 +24,11 @@
         border-radius: 4px;
         background-color: white;
     }
+
+    #LoginPanelEntry{
+        font-size: 20px;
+        text-decoration:underline;
+    }
 </style>
 <span id="LoginPanelEntry">点击登录</span>
 <table id="LoginPanelMask" class="hide">
@@ -116,7 +121,7 @@
         });
 
         $.get("/js/ajax/getUserInfo.do",function(d){
-            $("#LoginPanelEntry").text(d.IsSuccess? d.ReturnString:"点击登录");
+            $("#LoginPanelEntry").text(d.code==0? d.name:"点击登录");
         })
     });
 </script>

@@ -111,9 +111,15 @@ public class JsDelegate {
     }
 
     @RequestMapping("/reset.do")
-    public @ResponseBody String reset(HttpServletRequest req,HttpServletResponse res){
-        Engine.exit();
-        HttpHelper.reset();
+    public @ResponseBody String reset(HttpServletRequest req,HttpServletResponse res,@RequestParam(defaultValue = "all") String type){
+        if ("js".equals(type)) {
+            Engine.exit();
+        }else if ("net".equals(type)) {
+            HttpHelper.reset();
+        }else{
+            Engine.exit();
+            HttpHelper.reset();
+        }
         return "{code:'success'}";
     }
 }

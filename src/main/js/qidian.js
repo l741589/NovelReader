@@ -12,6 +12,18 @@ $.log($.ext.sf());
 String.prototype.__trim=function(){
 
 };
+
+var u={
+    db:$.ext.db,
+    getUser:function(){
+        if (this.getToken()==null) return null;
+        return this.db().queryOne("user",{tokenmd5: $.util.md5(this.getToken()),token:this.getToken()});
+    },
+    getToken:function(){
+        return $.http.cookie("cmfuToken")
+    }
+}
+
 function search(args){
     var url="http://4g.if.qidian.com/Atom.axd/Api/Search/GetBookStore?key="+args.keyword;
     if (args.page==null) url+="&type=0";
@@ -58,12 +70,16 @@ function chapter(args){
             c.Content=ct;
         }
         try{
-            if (b!=null) $.ext.db().update("book",b);
-            if (c!=null) $.ext.db().update("chapter",c);
+            if (b!=null) u.db().update("book",b);
+            if (c!=null) u.db().update("chapter",c);
             if (o.ReturnObject[2]){
                 o.ReturnObject[2].forEach(function(c){
-                    if (c!=null) $.ext.db().update("chapter",c);
+                    if (c!=null) u.db().update("chapter",c);
                 })
+            }
+            if (b!=null&&c!=null){
+                var user= u.getUser();
+                if (user) u.db().update("recentread",{uid:user.uid,bid: b.BookId,cid: c.ChapterId});
             }
         }catch(e){
             $.log(e);
@@ -108,21 +124,37 @@ function buyChapter(args){
 function getUserInfo(){
     //IsSuccess
     //ReturnString name
-    var ret=$.http.get("http://3g.qidian.com/ajax/userajax.ashx?ajaxMethod=checkuserlogin").exec().json("utf-8");
-    if (ret.IsSuccess) {
-        var c=$.http.cookie("cmfuToken");
-        $.ext.db().update("user",{username: $.util.md5(c) });
-    }
+    var res=$.http.post("http://4g.if.qidian.com/Atom.axd/Api/User/Get",{gender:0}).exec().json("utf-8");
+    if (res.Data==null) return{data:{code:-1}};
+    var ret={
+        name:res.Data.NickName,
+        quid:res.Data.UserId,
+        token: u.getToken(),
+        tokenmd5: $.util.md5(u.getToken())
+    };
+    u.db().update("user",ret);
+    ret.code=0;
     return {
         data:ret
     }
 }
 
 function recent(){
+    var user= u.getUser();
+    var data=null;
+    if (user) {
+        data=u.db().query("select `BookName` as bn,`ChapterName` as cn,`BookId` as bid,`ChapterId` as cid from recent_chapter where uid=?", [user.uid]);
+    }else{
+        return {
+            "redirect":"/js/search.do"
+        }
+    }
+    if (data==null) data=[];
     return {
         page:"/page/recent.jsp",
         data:{
-            username:"abc"
+            username: user.name,
+            data:data
         }
     }
 }

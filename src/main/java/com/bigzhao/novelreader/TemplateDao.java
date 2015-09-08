@@ -55,7 +55,7 @@ public class TemplateDao {
                 sb.append(separatorEach);
                 sb.append('?');
                 Object val=ScriptableObject.getProperty(obj, ids[i].toString());
-                args.add(val);
+                args.add(Engine.jsToJava(val));
             }
             s1=sb.toString();
         }
@@ -78,7 +78,7 @@ public class TemplateDao {
 
                 sb2.append('?');
                 Object val=ScriptableObject.getProperty(obj, ids[i].toString());
-                args.add(val);
+                args.add(Engine.jsToJava(val));
             }
             s1=sb.toString();
             s2=sb2.toString();
@@ -150,6 +150,7 @@ public class TemplateDao {
         }else{
             throw new IllegalArgumentException("args must be Array or Object");
         }
+        System.out.println(sql);
         KeyHolder kh = new GeneratedKeyHolder();
         t.update(sql, as);
         return Engine.javaToJs(kh.getKeys());
@@ -171,6 +172,7 @@ public class TemplateDao {
         }else{
             throw new IllegalArgumentException("args must be Array or Object");
         }
+        System.out.println(sql);
         KeyHolder kh = new GeneratedKeyHolder();
         t.update(sql, as);
         return Engine.javaToJs(kh.getKeys());

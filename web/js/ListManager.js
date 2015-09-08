@@ -6,6 +6,7 @@ function ListManager(data,itePieceUrl,itemUpdate){
     var _this=this;
     this.data=data;
     this.list=$("#list");
+    this.list.prop("listManager",this);
     this.itemCount=this.data.length;
     var h=this.list.prop("clientHeight");
     this.pageItemCount=Math.floor(h/this.list.attr("itemHeight"));
