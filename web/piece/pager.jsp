@@ -63,7 +63,7 @@
                                 <td><span class="max">10</span></td>
                             </tr>
                             <tr>
-                                <td style="min-height: 8px;text-align: center" colspan="3">
+                                <td style="height: 8px;text-align: center" colspan="3">
                                     <span class="msg hide" style="display: inline-block"></span>
                                 </td>
                             </tr>
@@ -90,6 +90,7 @@
                     opg.find(".page").mousedown(function(){
                         lm=$("#list").prop("listManager");
                         if (lm==null) return;
+                        msg.addClass("hide");
                         pg.removeClass("hide");
                         pg.find(".max").text(lm.pageCount);
                         pg.find(".pagenum").val(lm.page+1);
@@ -103,7 +104,10 @@
                             msg.text("请输入合法的整数");
                             msg.removeClass("hide");
                         }else if (x>lm.pageCount){
-                            msg.text("请保证输入的页码大于0，且小于总页数");
+                            msg.text("页码不能大于"+lm.pageCount);
+                            msg.removeClass("hide");
+                        }else if (x<=0){
+                            msg.text("页码必须大于0");
                             msg.removeClass("hide");
                         }else{
                             lm.setPage(x-1);

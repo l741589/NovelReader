@@ -143,7 +143,8 @@ function recent(){
     var user= u.getUser();
     var data=null;
     if (user) {
-        data=u.db().query("select `BookName` as bn,`ChapterName` as cn,`BookId` as bid,`ChapterId` as cid from recent_chapter where uid=?", [user.uid]);
+        data=u.db().query("select `BookName` as bn,`AuthorName` as an,`ChapterName` as cn,`BookId` as bid,`ChapterId` as cid,`time` " +
+            "from recent_chapter where uid=? order by `time` desc limit 100", [user.uid]);
     }else{
         return {
             "redirect":"/js/search.do"
@@ -156,5 +157,17 @@ function recent(){
             username: user.name,
             data:data
         }
+    }
+}
+
+function del_recent(args){
+    var bid=args.bid.toString();
+    var user= u.getUser();
+    if (user==null||bid==null) return {data:{code:-1}}
+    try {
+        u.db().delete("recentread", {uid: user.uid, bid: bid});
+        return {data:{code:0}}
+    }catch(e){
+        return {data:{code:-2}}
     }
 }

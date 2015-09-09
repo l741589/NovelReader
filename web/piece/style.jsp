@@ -63,7 +63,7 @@
         height: 100%;
     }
     .hide{
-        display: none;
+        display: none !important;
     }
 </style>
 <script>

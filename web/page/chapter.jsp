@@ -69,7 +69,7 @@
     <%@include file="/piece/ProgressBar.jsp"%>
     <script>
         ProgressBar.onScroll=function(per){
-            console.log("per:"+per);
+            //console.log("per:"+per);
             if (per<0.01) document.getElementById("smalltitle").className="hide";
             else document.getElementById("smalltitle").className="";
         };

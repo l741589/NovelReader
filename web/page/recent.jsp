@@ -49,7 +49,7 @@
             line-height: 24px;
             width: 100%;
             bottom: 5px;
-            text-align: right;
+            text-align: left;
             font-size: 20px;
         }
         #list li span.cname{
@@ -59,6 +59,21 @@
             font-size: 28px;
             height: 32px;
             line-height: 32px;
+        }
+        #list li span.aname{
+            height: 20px;
+            line-height: 20px;
+            width: 100%;
+            bottom: 5px;
+            text-align: right;
+            font-size: 16px;
+        }
+        #list li input{
+            position: absolute;
+            right:0;
+            top:8px;
+            height:28px;
+            font-size: 14px;;
         }
     </style>
     <span id="title">${username}-最近阅读</span>
@@ -78,8 +93,15 @@
                 n.mousedown(function(){
                     window.location.href="/js/chapter.do?bid="+ d.bid+"&cid="+ d.cid;
                 });
-                n.find(".cname").text(d.cn);
+                n.find(".aname").text(d.an);
                 n.find(".bname").text(d.bn);
+                n.find(".cname").text(d.cn);
+                n.find("input").mousedown(function(){
+                    $.get("/js/ajax/del_recent.do?bid="+ d.bid,function(d){
+                        if (d.code===0) window.location.reload();
+                    });
+                    return false;
+                });
             });
         })
     </script>
