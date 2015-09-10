@@ -143,8 +143,8 @@ function recent(){
     var user= u.getUser();
     var data=null;
     if (user) {
-        data=u.db().query("select `BookName` as bn,`AuthorName` as an,`ChapterName` as cn,`BookId` as bid,`ChapterId` as cid,`time` " +
-            "from recent_chapter where uid=? order by `time` desc limit 100", [user.uid]);
+        data=u.db().query("SELECT `BookName` AS bn,`AuthorName` AS an,`ChapterName` AS cn,`BookId` AS bid,`ChapterId` AS cid,`time` " +
+            "FROM recent_chapter WHERE uid=? ORDER BY `time` DESC LIMIT 100", [user.uid]);
     }else{
         return {
             "redirect":"/js/search.do"

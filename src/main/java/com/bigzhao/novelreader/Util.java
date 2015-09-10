@@ -21,13 +21,9 @@ public class Util {
     }
 
     public String getSid(HttpServletRequest req,HttpServletResponse res){
-        Cookie[] cs=req.getCookies();
-        if (cs!=null) {
-            for (Cookie c : cs) {
-                if ("z_sid".equals(c.getName())) return c.getValue();
-            }
-        }
-        String sid=req.getSession().getId();
+        String sid=getCookieValue(req,"z_sid");
+        if (sid!=null) return sid;
+        sid=req.getSession().getId();
         addCookie(res,"z_sid",sid);
         return sid;
     }
@@ -39,5 +35,18 @@ public class Util {
         return c;
     }
 
+    public String getCookieValue(HttpServletRequest req,String name){
+        Cookie[] cs=req.getCookies();
+        return getCookieValue(cs,name);
+    }
+
+    public String getCookieValue(Cookie[] cs,String name){
+        if (cs!=null) {
+            for (Cookie c : cs) {
+                if (name.equals(c.getName())) return c.getValue();
+            }
+        }
+        return null;
+    }
 
 }
