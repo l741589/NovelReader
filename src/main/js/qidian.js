@@ -6,9 +6,6 @@ $.load("login.js");
 $.load("systest.js");
 $.http.proxy("localhost",8888);
 
-$.log($.ext.jt());
-$.log($.ext.sf());
-
 String.prototype.__trim=function(){
 
 };
@@ -25,7 +22,7 @@ var u={
 }
 
 function search(args){
-    var url="http://4g.if.qidian.com/Atom.axd/Api/Search/GetBookStore?key="+args.keyword;
+    var url="http://4g.if.qidian.com/Atom.axd/Api/Search/GetBookStore?key="+(args.keyword||"");
     if (args.page==null) url+="&type=0";
     else url+="&pageIndex="+args.page;
     var o= $.http.get(url).exec().json("utf-8");
@@ -124,7 +121,9 @@ function buyChapter(args){
 function getUserInfo(){
     //IsSuccess
     //ReturnString name
-    var res=$.http.post("http://4g.if.qidian.com/Atom.axd/Api/User/Get",{gender:0}).exec().json("utf-8");
+    var res=$.http.post("http://4g.if.qidian.com/Atom.axd/Api/User/Get",{gender:"0"})
+        .header({QDInfo:"T18EP3wKbZTj0O++Mbj0a8yWe36CGeaoywJZoWp0wJUDp4gBNQ5n4UzQmt+Pr6bflY7rGPrWno3v2/4b39jRTqJlWQrWIw7TKd0v+vH6Y2I="})
+        .exec().json("utf-8");
     if (res.Data==null) return{data:{code:-1}};
     var ret={
         name:res.Data.NickName,

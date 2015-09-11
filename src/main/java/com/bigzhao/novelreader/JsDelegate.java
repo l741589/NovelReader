@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bigzhao.jsexe.engine.Engine;
 import com.bigzhao.jsexe.engine.net.HttpHelper;
 import com.bigzhao.jsexe.util.L;
+import com.bigzhao.novelreader.entity.NavStack;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
@@ -36,6 +37,7 @@ import java.util.stream.StreamSupport;
 @Controller
 public class JsDelegate {
     @Autowired Util util;
+    @Autowired NavStacker navStacker;
 
     @RequestMapping("/js/{method}.do")
     public ModelAndView page(HttpServletRequest req,HttpServletResponse res,@PathVariable() String method){
@@ -62,7 +64,27 @@ public class JsDelegate {
                 mv.addObject("data", data.toString());
             }
         }
+        mv.addObject("__back",navStacker.get(req,res));
+        tryAdd(mv,json,"menu","[]");
+        tryAdd(mv,json,"title",null);
         return mv;
+    }
+
+    @RequestMapping("/back.do")
+    public void back(HttpServletRequest req,HttpServletResponse res){
+        String url=navStacker.back(req,res);
+        try {
+            res.setHeader("isBack","1");
+            res.sendRedirect(url);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void tryAdd(ModelAndView mv,JSONObject json,String key,Object def){
+        Object menu=json.get(key);
+        if (menu!=null) mv.addObject("menu",menu);
+        else if (def!=null) mv.addObject(key,def);
     }
 
     @RequestMapping(value="/js/ajax/{method}.do",produces={"application/json;charset=UTF-8"})

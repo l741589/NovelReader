@@ -18,44 +18,7 @@
     <table cellspacing="0" cellpadding="0" class="match_parent" style="width: 90%;margin: 0 auto">
         <tr style="height: 64px;">
             <td>
-                <style scoped>
-                    #header{
-                        width: 100%;
-                        height: 100%;
-                        position: relative;
-                    }
-                    #header span{
-                        height:64px;
-                        line-height:64px;
-                        display:inline-block;
-                        text-overflow: ellipsis;
-                        overflow: hidden;
-                        white-space:nowrap;
-                        font-size: 28px;
-                        position: absolute;
-                        right: 100px;
-                        left: 0;
-                    }
-                    #header a{
-                        height:64px;
-                        line-height:64px;
-                        white-space:nowrap;
-                        display:inline-block;
-                        font-size: 20px;
-                        position: absolute;
-                        right: 0;
-                    }
-                    #header hr{
-                        position: absolute;
-                        width: 100%;
-                        bottom: 2px;
-                    }
-                </style>
-                <div id="header">
-                    <span>${BookName}-${Author}</span>
-                    <a href="/js/search.do?keyword=${BookName}">回到主页</a>
-                    <hr>
-                </div>
+                <%@include file="/piece/ActionBar.jsp"%>
             </td>
         </tr>
         <tr>
@@ -94,6 +57,7 @@
         </tr>
     </table>
     <script>
+        TITLE="${BookName}-${Author}";
         $(document).ready(function(){
             var ch=${Chapters};
             var vl_=${Volumes};

@@ -29,9 +29,8 @@
             line-height: 40px;
         }
     </style>
-    <div style="padding-top:8px">
-        <span style="font-size: 48px;margin-top: 8px;margin-bottom: 8px">${title}</span>
-        <hr>
+    <div style="height: 64px">
+        <%@include file="/piece/ActionBar.jsp"%>
     </div>
     <div class="nav">
         <a class="input" style="width: 33%;left: 0" href="?bid=${param.bid}&cid=${prev}">上一章</a>
@@ -63,7 +62,7 @@
         <a class="input" style="left: 33%;right: 33%" href="/js/content.do?BookId=${param.bid}">目录</a>
         <a class="input" style="width: 33%;right: 0" href="?bid=${param.bid}&cid=${next}">下一章</a>
     </div>
-    <div id="smalltitle" style="position: fixed;width: 16px;word-break: break-all;word-wrap: break-word;top: 0;left: 0">
+    <div id="smalltitle" class="hide" style="position: fixed;width: 16px;word-break: break-all;word-wrap: break-word;top: 0;left: 0">
         ${title}
     </div>
     <%@include file="/piece/ProgressBar.jsp"%>

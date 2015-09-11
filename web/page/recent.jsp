@@ -13,21 +13,14 @@
     <%@include file="/piece/style.jsp"%>
     <script src="/js/jquery-2.1.4.min.js"></script>
 </head>
-<body style="position: fixed;left: 5%;width: 90%;height: 100%">
+<body style="position: fixed;height: 100%">
     <style scoped>
-        #title{
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            font-size: 24px;
-            height: 48px;
-            line-height: 48px;
-        }
         #list{
             position: absolute;
             bottom: 64px;
             top: 48px;
-            width: 100%
+            right: 32px;
+            left:32px;
         }
 
         #list li{
@@ -76,18 +69,18 @@
             font-size: 14px;;
         }
     </style>
-    <span id="title">${username}-最近阅读</span>
-    <hr>
+    <%@include file="/piece/ActionBar.jsp"%>
 
     <ul id="list" itemheight="64">
 
     </ul>
-    <div style="height: 64px;position: absolute;bottom: 0;width: 100%">
+    <div style="height: 64px;position: absolute;bottom: 0;left: 32px;right: 32px">
         <%@include file="/piece/pager.jsp"%>
     </div>
     <script src="/js/ListManager.js"></script>
 
     <script>
+        TITLE="${username}-最近阅读";
         $(document).ready(function(){
             var lm=new ListManager(${data},"/piece/recent_list_item.html",function(n,d){
                 n.mousedown(function(){
