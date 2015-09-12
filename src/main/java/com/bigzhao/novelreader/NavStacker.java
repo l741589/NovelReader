@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -32,27 +35,54 @@ public class NavStacker extends GeneralCacheAdministrator{
     private final String home="/js/search.do";
     private final int refreshPeriod=3600*24;
 
-    public void nav(HttpServletRequest req,HttpServletResponse res){
+    public String nav(HttpServletRequest req,HttpServletResponse res){
         String sid=util.getSid(req, res);
         String refer=req.getHeader("Referer");
-        String url=req.getRequestURL().toString();
-        if (url.equals(refer)) return;
+        String url=req.getRequestURL()+"?"+req.getQueryString();
+
         LinkedList<String> list=getList(sid);
+
         if (refer==null){
             list.clear();
             list.addLast(home);
-            if (url.endsWith(home)) list.add(url);
-        }else  {
-            while(list.size()>0&&!refer.equals(list.getLast())){
-                list.removeLast();
+            list.add(url);
+            refer=home;
+        }else{
+            Iterator<String> i=list.iterator();
+            boolean eqs=false;
+            while(i.hasNext()){
+                String s=i.next();
+                if (eq(s,url)) {
+                    eqs=true;
+                    break;
+                }
             }
-            if (list.size()==0) {
-                list.addLast(home);
-                list.addLast(refer);
+            if (eqs) i.remove();
+            while(i.hasNext()){
+                i.next();
+                i.remove();
+            }
+            if (eq(list.getLast(),refer)){
+                list.removeLast();
+                list.add(refer);
+            }else{
+                refer=list.getLast();
             }
             list.add(url);
         }
         put(sid,list);
+        return refer;
+    }
+
+    public boolean eq(String s1,String s2){
+        if (s1==null||s2==null) return false;
+        return getUrlWithoutQueryString(s1).equals(getUrlWithoutQueryString(s2));
+    }
+
+    public String getUrlWithoutQueryString(String s){
+        int x=s.indexOf('?');
+        if (x==-1) return s;
+        return s.substring(0,x);
     }
 
     public String back(HttpServletRequest req,HttpServletResponse res){
@@ -62,23 +92,6 @@ public class NavStacker extends GeneralCacheAdministrator{
         s.removeLast();
         if (s.isEmpty()) return home;
         return s.getLast();
-    }
-
-    public String get(HttpServletRequest req,HttpServletResponse res){
-        if (!"1".equals(req.getHeader("isBack"))) nav(req,res);
-        LinkedList<String> s=getList(util.getSid(req,res));
-        LinkedList<String> tmp=null;
-        if (s.isEmpty()) return home;
-        String ret=s.getLast();
-        while (!s.isEmpty()&&req.getRequestURL().toString().equals(ret)){
-            if (tmp==null) tmp=new LinkedList<>();
-            tmp.addLast(s.pollLast());
-            ret=s.getLast();
-        }
-        if (ret==null) ret=home;
-
-        if (tmp!=null) while(!tmp.isEmpty()) s.addLast(tmp.pollLast());
-        return ret;
     }
 
     private void put(String sid,LinkedList<String> list){
@@ -93,7 +106,9 @@ public class NavStacker extends GeneralCacheAdministrator{
         try {
             return list=(LinkedList<String>)getFromCache(key,refreshPeriod);
         } catch (NeedsRefreshException e) {
-            putInCache(key,list=new LinkedList<>());
+            list=new LinkedList<>();
+            list.add(home);
+            putInCache(key, list);
             return list;
         }finally {
             if (list==null) cancelUpdate(key);

@@ -28,9 +28,16 @@
             text-align: center;
             line-height: 40px;
         }
+
+        #title{
+            font-size: 48px;
+        }
     </style>
     <div style="height: 64px">
         <%@include file="/piece/ActionBar.jsp"%>
+    </div>
+    <div id="title">
+        <span>${title}</span>
     </div>
     <div class="nav">
         <a class="input" style="width: 33%;left: 0" href="?bid=${param.bid}&cid=${prev}">上一章</a>

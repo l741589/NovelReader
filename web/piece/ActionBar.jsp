@@ -29,6 +29,7 @@
         background-color: black;
     }
     #ActionBar .back{
+        border: 0;
         position: absolute;
         left: 0;
         top:8px;
@@ -54,7 +55,7 @@
     }
 </style>
 <div id="ActionBar">
-    <a class="back" href="/back.do"></a>
+    <input type="button" class="back" onmousedown="javascript:window.location.href='${__back}'">
     <span class="title"></span>
     <div class="menu"></div>
 </div>

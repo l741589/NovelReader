@@ -64,7 +64,7 @@ public class JsDelegate {
                 mv.addObject("data", data.toString());
             }
         }
-        mv.addObject("__back",navStacker.get(req,res));
+        mv.addObject("__back",navStacker.nav(req,res));
         tryAdd(mv,json,"menu","[]");
         tryAdd(mv,json,"title",null);
         return mv;

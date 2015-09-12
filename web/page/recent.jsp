@@ -66,7 +66,11 @@
             right:0;
             top:8px;
             height:28px;
-            font-size: 14px;;
+            font-size: 14px;
+            line-height: 28px;
+            border-width: 1px;
+            border-radius: 4px;
+            padding-top: 0;
         }
     </style>
     <%@include file="/piece/ActionBar.jsp"%>
