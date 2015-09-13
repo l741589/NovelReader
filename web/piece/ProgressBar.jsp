@@ -20,6 +20,7 @@
     var ProgressBar= {
         init: function () {
             var div = document.createElement("div");
+            div.id="ProgressBar";
             div.className = "ProgressBar"
             document.body.appendChild(div);
             var _this=this;

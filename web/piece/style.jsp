@@ -65,6 +65,47 @@
     .hide{
         display: none !important;
     }
+
+    .cfghide{
+        display: none !important;
+    }
+
+    .mask{
+         position: fixed;
+         left: 0;
+         right: 0;
+         top: 0;
+         bottom: 0;
+         width: 100%;
+         height: 100%;
+         background-color: rgba(0,0,0,0.5);
+     }
+
+    .mask > tr > td, .mask > tbody > tr > td {
+        text-align: center;
+    }
+
+    .dialog{
+        display: inline-block;
+        border: 4px black solid;
+        border-radius: 4px;
+        background-color: white;
+    }
+
+    input[type=checkbox]{
+        display: none !important;
+    }
+
+    input[type=checkbox] + label{
+        width: 32px;
+        height: 32px;
+        border: 4px black solid;
+        background: white;
+        display: inline-block;
+    }
+    input[type=checkbox]:checked + label{
+        background: black;
+    }
 </style>
 <script>
 

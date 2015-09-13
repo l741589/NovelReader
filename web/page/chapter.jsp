@@ -12,6 +12,7 @@
     <title>${title}-${bookname}-${author}|Z读</title>
     <%@include file="/piece/style.jsp"%>
     <script src="/js/jquery-2.1.4.min.js"></script>
+    <script src="/js/jquery.cookie.js"></script>
 </head>
 <body style="width: 90%;margin: 0 auto">
     <style scoped>
@@ -51,6 +52,7 @@
             }
             pre{
                 font-size: 32px;
+                line-height: 40px;
                 word-break: break-all;
                 word-wrap: break-word;
                 white-space: pre-wrap;
@@ -73,12 +75,21 @@
         ${title}
     </div>
     <%@include file="/piece/ProgressBar.jsp"%>
+    <%@include file="/piece/ReaderConfig.jsp"%>
     <script>
         ProgressBar.onScroll=function(per){
             //console.log("per:"+per);
-            if (per<0.01) document.getElementById("smalltitle").className="hide";
-            else document.getElementById("smalltitle").className="";
+            if (per<0.01) $("#smalltitle").addClass("hide");
+            else $("#smalltitle").removeClass("hide")
         };
+        ACTIONBAR.MENU=[
+            {
+                name:"阅读设置",
+                action:function(){
+                    if (cfg) cfg.show();
+                }
+            }
+        ];
         $(document).ready(function(){
             if (${needBuy}){
                 $("#content").text("还未订阅当前章节，需要花费${price}起点币");

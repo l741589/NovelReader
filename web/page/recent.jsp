@@ -84,7 +84,7 @@
     <script src="/js/ListManager.js"></script>
 
     <script>
-        TITLE="${username}-最近阅读";
+        ACTIONBAR.TITLE="${username}-最近阅读";
         $(document).ready(function(){
             var lm=new ListManager(${data},"/piece/recent_list_item.html",function(n,d){
                 n.mousedown(function(){

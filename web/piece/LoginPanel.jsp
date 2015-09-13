@@ -7,34 +7,16 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <style scoped>
-    #LoginPanelMask {
-        position: fixed;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.5);
-    }
-
-    #LoginPanel {
-        display: inline-block;
-        border: 4px black solid;
-        border-radius: 4px;
-        background-color: white;
-    }
-
     #LoginPanelEntry{
         font-size: 20px;
         text-decoration:underline;
     }
 </style>
 <span id="LoginPanelEntry">点击登录</span>
-<table id="LoginPanelMask" class="hide">
+<table id="LoginPanelMask" class="hide mask">
     <tr>
         <td style="text-align: center">
-            <table id="LoginPanel">
+            <table id="LoginPanel" class="dialog">
                 <tr class="title">
                     <td>登录起点</td>
                 </tr>

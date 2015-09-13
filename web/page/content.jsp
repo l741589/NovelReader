@@ -57,7 +57,7 @@
         </tr>
     </table>
     <script>
-        TITLE="${BookName}-${Author}";
+        ACTIONBAR.TITLE="${BookName}-${Author}";
         $(document).ready(function(){
             var ch=${Chapters};
             var vl_=${Volumes};
