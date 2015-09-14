@@ -33,6 +33,12 @@
         #title{
             font-size: 48px;
         }
+        #clock{
+            font-size: 16px;
+            position: fixed;
+            right: 0;
+            bottom: 0;
+        }
     </style>
     <div style="height: 64px">
         <%@include file="/piece/ActionBar.jsp"%>
@@ -74,6 +80,7 @@
     <div id="smalltitle" class="hide" style="position: fixed;width: 16px;word-break: break-all;word-wrap: break-word;top: 0;left: 0">
         ${title}
     </div>
+    <span id="clock"></span>
     <%@include file="/piece/ProgressBar.jsp"%>
     <%@include file="/piece/ReaderConfig.jsp"%>
     <script>
@@ -81,6 +88,8 @@
             //console.log("per:"+per);
             if (per<0.01) $("#smalltitle").addClass("hide");
             else $("#smalltitle").removeClass("hide")
+            var d=new Date();
+            $("#clock").text(d.getHours()+":"+d.getMinutes());
         };
         ACTIONBAR.MENU=[
             {
@@ -91,6 +100,8 @@
             }
         ];
         $(document).ready(function(){
+            var d=new Date();
+            $("#clock").text(d.getHours()+":"+d.getMinutes());
             if (${needBuy}){
                 $("#content").text("还未订阅当前章节，需要花费${price}起点币");
                 var p=$("#buy");

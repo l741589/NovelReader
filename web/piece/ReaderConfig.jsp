@@ -48,6 +48,13 @@
                     </td>
                 </tr>
                 <tr>
+                    <td>显示时间：</td>
+                    <td>
+                        <input id="readercfg-show-clock" name="show-clock" type="checkbox">
+                        <label for="readercfg-show-clock"></label>
+                    </td>
+                </tr>
+                <tr>
                     <td colspan="2">
                         <input type="button" value="确定" class="ok">
                         <input type="button" value="取消" class="cancel">
@@ -74,6 +81,7 @@ function ReaderConfig(){
                 _this["line-height"]=ss[2]||48;
                 _this["show-smalltitle"]=ss[3]===undefined?true:(ss[3]=="true"||ss[3]==true);
                 _this["show-progress"]=ss[4]===undefined?true:(ss[4]=="true"||ss[4]==true);
+                _this["show-clock"]=ss[5]===undefined?true:(ss[5]=="true"||ss[5]==true);
             }
         },
         encoder:{
@@ -82,7 +90,8 @@ function ReaderConfig(){
                     _this["font-size"],
                     _this["line-height"],
                     _this["show-smalltitle"],
-                    _this["show-progress"]
+                    _this["show-progress"],
+                    _this["show-clock"]
                 ].join(_this.seperator);
             }
         },
@@ -119,6 +128,7 @@ function ReaderConfig(){
             pre.css("line-height",setv("line-height"));
             show("#smalltitle",setv("show-smalltitle"));
             show("#ProgressBar",setv("show-progress"));
+            show("#clock",setv("show-clock"));
         },
         update:function(){
             var d=$("#ReaderConfig");
@@ -147,6 +157,7 @@ function ReaderConfig(){
             _this["line-height"]=pre.css("line-height");
             _this["show-smalltitle"]=!$("#smalltitle").hasClass("cfghide");
             _this["show-progress"]=!$("#ProgressBar").hasClass("cfghide");
+            _this["show-clock"]=!$("#clock").hasClass("cfghide");
         },
         show:function(){
             $("#ReaderConfigMask").removeClass("hide");
