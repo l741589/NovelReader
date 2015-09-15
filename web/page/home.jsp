@@ -25,7 +25,7 @@
             <td class="col">
                 <p>我的库</p>
             </td>
-            <td class="col"><a href="/js/search.do?keyword=你">
+            <td class="col"><a href="/js/search.do">
                 <p>小说阅读</p></a>
             </td>
         </tr>
