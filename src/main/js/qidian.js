@@ -4,7 +4,7 @@
 //$.load("lib.js");
 $.load("login.js");
 $.load("systest.js");
-//$.http.proxy("localhost",8888);
+$.http.proxy("localhost",8888);
 
 String.prototype.__trim=function(){
 

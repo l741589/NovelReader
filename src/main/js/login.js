@@ -40,9 +40,9 @@ function login(args){
     }
 }
 
-function checkCodeLogin(args){
+function checkCodeLogin(args,guid){
     try {
-        $.log(ZLogin.Config.GUID);
+        $.log(guid);
         var data = ZLogin.CheckCodeLogin(args.code.toString());
         if (data.return_code == -1111)  return {data:{code:-1111,msg:"服务器错误"}}
         if (data.return_code == 8)  {

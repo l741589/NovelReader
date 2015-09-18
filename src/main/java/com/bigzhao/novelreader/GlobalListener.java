@@ -1,5 +1,6 @@
 package com.bigzhao.novelreader;
 
+import com.bigzhao.jsexe.engine.Engine;
 import com.bigzhao.jsexe.engine.interfaces.JSInterfaceHelper;
 import org.hibernate.SessionFactory;
 import org.springframework.context.ApplicationEvent;
@@ -23,6 +24,7 @@ public class GlobalListener implements ApplicationListener<ContextRefreshedEvent
             JSInterfaceHelper.registerJsInterfaceFunction("jt", getClass().getMethod("jt"));
             JSInterfaceHelper.registerJsInterfaceFunction("sf",getClass().getMethod("sf"));
             JSInterfaceHelper.registerJsInterfaceFunction("db",getClass().getMethod("db"));
+            Engine.scopeStrategy= Engine.ScopeStrategy.THREAD_LOCAL;
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }

@@ -45,7 +45,7 @@
 <script>
     $(document).ready(function () {
         var p=$("#LoginPanel");
-
+        var guid;
         function setStatus(status){
             p.attr("status",status);
             if (status==0){
@@ -72,6 +72,7 @@
             }else if (d.code==8){
                 setStatus(1);
                 p.find(".cc img").attr("src", d.url+"&x="+Math.random())
+                guid= d.guid;
             }else{
                 setStatus(0);
                 p.find(".title td").text(d.msg);
@@ -93,7 +94,8 @@
                 p.attr("disabled","disabled");
             }else{
                 $.post("/js/ajax/checkCodeLogin.do",{
-                    code: p.find(".cc input").val()
+                    code: p.find(".cc input").val(),
+                    guid:guid
                 },handleResponse);
             }
         });
