@@ -121,6 +121,18 @@ function buyChapter(args){
 function getUserInfo(){
     //IsSuccess
     //ReturnString name
+    var q=$.http.rawCookie();
+    if (q==null|| q.length==0){
+        $.log($.jsexe.getScopeId());
+        try {
+            var cs = u.db().queryOne("cookiestore", {sid: $.jsexe.getScopeId()});
+            if (cs != null&&new Date().getTime()-cs.time.getTime()<604800000) {
+                $.http.setCookies(JSON.parse(cs.data));
+            }
+        }catch(e){
+            $.log(e);
+        }
+    }
     var res=$.http.post("http://4g.if.qidian.com/Atom.axd/Api/User/Get",{gender:"0"})
         .header({QDInfo:"T18EP3wKbZTj0O++Mbj0a8yWe36CGeaoywJZoWp0wJUDp4gBNQ5n4UzQmt+Pr6bflY7rGPrWno3v2/4b39jRTqJlWQrWIw7TKd0v+vH6Y2I="})
         .exec().json("utf-8");
@@ -132,6 +144,7 @@ function getUserInfo(){
         tokenmd5: $.util.md5(u.getToken())
     };
     u.db().update("user",ret);
+    u.db().update("cookiestore",{sid: $.jsexe.getScopeId(),data: JSON.stringify($.http.rawCookie())});
     ret.code=0;
     return {
         data:ret

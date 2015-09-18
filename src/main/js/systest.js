@@ -14,3 +14,9 @@ function scope(){
         }
     }
 }
+function cookie(){
+    return{
+        page:"/page/test.jsp",
+        data: $.http.rawCookie()
+    }
+}
