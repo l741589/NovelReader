@@ -41,6 +41,21 @@ function content(args){
     }
 }
 
+function chapter2(args){
+    var meid="a000005573853e";
+    var s;
+    if (args.vip){
+        var url= $.format("http://4g.if.qidian.com/Atom.axd/Api/Book/GetVipContent?b=%s&c=%s&i=%s",args.bid.toString(),args.cid.toString(),meid);
+        var o= $.http.post(url).exec().$data();
+        var s=$.ext.qd.decode(u.getUser().quid,args.bid.toString(),args.cid.toString(),meid,o);
+    }else{
+        var url= $.format("http://4g.if.qidian.com/Atom.axd/Api/Book/GetContent?BookId=%s&ChapterId=%s",args.bid.toString(),args.cid.toString());
+        var d=$.http.get(url).exec().json();
+        if (d) s= d.Data;
+    }
+    return s+"";
+}
+
 function chapter(args){
     function getRd(){
         var a = ($.http.cookie("rc") || "1") + ($.http.cookie("rf") || "18") + ($.http.cookie("mrm") || "2") + "1";
@@ -57,14 +72,19 @@ function chapter(args){
         } else {
             c = o.ReturnObject;
         }
-        if ((c.Content==null|| c.Content=="")&&c.MaxPageIndex>0) {
-            var ct=""
-            for (var i = 1; i <= c.MaxPageIndex;++i) {
-                var a = $.format("http://vipimage.qidian.com/BookReader/ChapterImageM.aspx?bookid=%s&chapterid=%s&width=%d&page=%d&rd=%s",
-                    args.bid.toString(), args.cid.toString(), 576, i, getRd());
-                ct += $.format('<img src="%s"/><br/>',a)
+        if (o.ReturnCode!=-108) {
+            if ((c.Content == null || c.Content == "")) {
+                c.Content = chapter2({bid: args.bid, cid: args.cid, vip: 1});
+                if ((c.Content == null || c.Content == "") && c.MaxPageIndex > 0) {
+                    var ct = ""
+                    for (var i = 1; i <= c.MaxPageIndex; ++i) {
+                        var a = $.format("http://vipimage.qidian.com/BookReader/ChapterImageM.aspx?bookid=%s&chapterid=%s&width=%d&page=%d&rd=%s",
+                            args.bid.toString(), args.cid.toString(), 576, i, getRd());
+                        ct += $.format('<img src="%s"/><br/>', a)
+                    }
+                    c.Content = ct;
+                }
             }
-            c.Content=ct;
         }
         try{
             if (b!=null) u.db().update("book",b);
@@ -94,7 +114,6 @@ function chapter(args){
                 needBuy: o.ReturnCode == -108
             }
         }
-
     }else {
         return null;
     }
