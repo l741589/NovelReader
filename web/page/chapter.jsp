@@ -14,8 +14,11 @@
     <script src="/js/jquery-2.1.4.min.js"></script>
     <script src="/js/jquery.cookie.js"></script>
 </head>
-<body style="width: 90%;margin: 0 auto">
+<body>
     <style scoped>
+        body{
+            background-color: #ffffff;
+        }
         .nav{
             position: relative;
             width: 100%;
@@ -31,6 +34,7 @@
         }
 
         #title{
+            margin-top: 8px;
             font-size: 48px;
         }
         #clock{
@@ -39,17 +43,28 @@
             right: 0;
             bottom: 0;
         }
+
+        #contentBox{
+            position: fixed;
+            top:52px;
+            bottom: 0;
+            left:32px;
+            right: 32px;
+            overflow-y: scroll;
+        }
+        ::-webkit-scrollbar{width: 0}
     </style>
     <div style="height: 64px">
         <%@include file="/piece/ActionBar.jsp"%>
     </div>
+    <div id="contentBox">
     <div id="title">
         <span>${title}</span>
     </div>
     <div class="nav">
-        <a class="input" style="width: 33%;left: 0" href="?bid=${param.bid}&cid=${prev}">上一章</a>
+        <a class="input prev" style="width: 33%;left: 0" href="?bid=${param.bid}&cid=${prev}">上一章</a>
         <a class="input" style="left: 33%;right: 33%" href="/js/content.do?BookId=${param.bid}">目录</a>
-        <a class="input" style="width: 33%;right: 0" href="?bid=${param.bid}&cid=${next}">下一章</a>
+        <a class="input next" style="width: 33%;right: 0" href="?bid=${param.bid}&cid=${next}">下一章</a>
     </div>
     <div>
         <style scoped>
@@ -73,12 +88,9 @@
         <input id="buy" type="button" value="购买" class="hide"/>
     </div>
     <div class="nav">
-        <a class="input" style="width: 33%;left: 0" href="?bid=${param.bid}&cid=${prev}">上一章</a>
+        <a class="input prev" style="width: 33%;left: 0" href="?bid=${param.bid}&cid=${prev}">上一章</a>
         <a class="input" style="left: 33%;right: 33%" href="/js/content.do?BookId=${param.bid}">目录</a>
-        <a class="input" style="width: 33%;right: 0" href="?bid=${param.bid}&cid=${next}">下一章</a>
-    </div>
-    <div id="smalltitle" class="hide" style="position: fixed;width: 16px;word-break: break-all;word-wrap: break-word;top: 0;left: 0">
-        ${title}
+        <a class="input next" style="width: 33%;right: 0" href="?bid=${param.bid}&cid=${next}">下一章</a>
     </div>
     <span id="clock"></span>
     <%@include file="/piece/ProgressBar.jsp"%>
@@ -117,7 +129,29 @@
                     });
                 });
             }
+            $("body").mousedown(function(e){
+                if (e.target.tagName=="A") return;
+                if (e.clientX>document.body.clientWidth/2){
+                    var cb=document.getElementById("contentBox");
+                    cb.scrollTop+=cb.clientHeight-cfg["line-height"].replace("px","");
+                }else{
+                    var cb=document.getElementById("contentBox");
+                    cb.scrollTop-=cb.clientHeight-cfg["line-height"].replace("px","");
+                }
+            });
+            ProgressBar.init(document.getElementById("contentBox"));
+            if ((${prev})<=0){
+                var p=$(".nav .prev");
+                p.text("到头了");
+                p.removeAttr("href");
+            }
+            if ((${next})<=0){
+                var p=$(".nav .next");
+                p.text("到尾了");
+                p.removeAttr("href");
+            }
         });
     </script>
+    </div>
 </body>
 </html>

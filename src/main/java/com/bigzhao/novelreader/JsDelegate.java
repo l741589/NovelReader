@@ -43,6 +43,7 @@ public class JsDelegate {
     public ModelAndView page(HttpServletRequest req,HttpServletResponse res,@PathVariable() String method){
         Engine.scope(util.getSid(req,res));
         Scriptable s;
+        util.track(req);
         Object obj=call(res,method, Engine.javaToJs(req.getParameterMap()));
         JSONObject json=(JSONObject)JSON.toJSON(obj);
         if (tryRedirect(json,res)) return null;
@@ -90,6 +91,7 @@ public class JsDelegate {
     @RequestMapping(value="/js/ajax/{method}.do",produces={"application/json;charset=UTF-8"})
     public @ResponseBody String ajax(HttpServletRequest req,HttpServletResponse res,@PathVariable() String method){
         Engine.scope(util.getSid(req, res));
+        util.track(req);
         Object obj=call(res,method, Engine.javaToJs(req.getParameterMap()));
         JSONObject json=(JSONObject)JSON.toJSON(obj);
         if (tryRedirect(json,res)) return null;
@@ -112,6 +114,7 @@ public class JsDelegate {
     @RequestMapping(value="/js/ajaxraw/{method}.do",produces={"application/json;charset=UTF-8"})
     public @ResponseBody String ajaxraw(HttpServletRequest req,HttpServletResponse res,@PathVariable() String method){
         Engine.scope(util.getSid(req,res));
+        util.track(req);
         Object obj=call(res,method, Engine.javaToJs(req.getParameterMap()));
         JSONObject json=(JSONObject)JSON.toJSON(obj);
         return json.toString();

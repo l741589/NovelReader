@@ -93,7 +93,7 @@
                         msg.addClass("hide");
                         pg.removeClass("hide");
                         pg.find(".max").text(lm.pageCount);
-                        pg.find(".pagenum").val(lm.page+1);
+                        pg.find(".pagenum").val(lm.page+1)
                     });
                     pd.find("input.cancel").mousedown(function(){pg.addClass("hide")});
                     pd.find("input.ok").mousedown(function(){

@@ -33,7 +33,7 @@
                     <td>行高：</td>
                     <td><input name="line-height"></td>
                 </tr>
-                <tr>
+                <tr class="hide">
                     <td>显示浮动标题：</td>
                     <td>
                         <input id="readercfg-show-smalltitle" name="show-smalltitle" type="checkbox">
@@ -89,7 +89,7 @@ function ReaderConfig(){
                 return [0,
                     _this["font-size"],
                     _this["line-height"],
-                    _this["show-smalltitle"],
+                    false,
                     _this["show-progress"],
                     _this["show-clock"]
                 ].join(_this.seperator);
@@ -126,7 +126,7 @@ function ReaderConfig(){
 
             pre.css("font-size",setv("font-size"));
             pre.css("line-height",setv("line-height"));
-            show("#smalltitle",setv("show-smalltitle"));
+            //show("#smalltitle",setv("show-smalltitle"));
             show("#ProgressBar",setv("show-progress"));
             show("#clock",setv("show-clock"));
         },
@@ -155,7 +155,7 @@ function ReaderConfig(){
             var pre=$("pre#content");
             _this["font-size"]=pre.css("font-size");
             _this["line-height"]=pre.css("line-height");
-            _this["show-smalltitle"]=!$("#smalltitle").hasClass("cfghide");
+            //_this["show-smalltitle"]=!$("#smalltitle").hasClass("cfghide");
             _this["show-progress"]=!$("#ProgressBar").hasClass("cfghide");
             _this["show-clock"]=!$("#clock").hasClass("cfghide");
         },

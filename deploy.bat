@@ -1,0 +1,1 @@
+copy "E:\IntellijWS\NovelReader\out\artifacts\NovelReader_war\NovelReader_war.war" "ftp://bigzhao_ftp:lyz741589@bigzhao.com/web/NovelReader_war.war"

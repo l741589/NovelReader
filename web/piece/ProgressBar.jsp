@@ -14,24 +14,24 @@
         height:0px;
         background-color: black;
         position: fixed;
+        z-index: 100;
     }
 </style>
 <script>
     var ProgressBar= {
-        init: function () {
+        init: function (view) {
             var div = document.createElement("div");
             div.id="ProgressBar";
             div.className = "ProgressBar"
             document.body.appendChild(div);
             var _this=this;
-            window.onscroll = function () {
-                var per = document.body.scrollTop / (document.body.scrollHeight - document.body.clientHeight);
-                div.style.height = (document.body.clientHeight - 4) * per;
+            view.onscroll = function () {
+                var per = view.scrollTop / (view.scrollHeight - view.clientHeight);
+                div.style.height = (view.clientHeight - 4) * per;
                 if (_this.onScroll) _this.onScroll(per);
             }
+            div.style.top=view.offsetTop;
         },
         onScroll:null
     };
-
-    ProgressBar.init();
 </script>

@@ -14,6 +14,7 @@
         top:0;
         left: 0;
         width: 100%;
+        z-index: 100;
     }
     #ActionBar .menu{
         border:0;
@@ -85,7 +86,7 @@
     <input type="button" class="back hide" onmousedown="javascript:window.location.href='${__back}'">
     <span class="title"></span>
     <input class="menu hide" type="button">
-    <li class="popup hide"></li>
+    <ul class="popup hide"></ul>
 </div>
 <script>
     ACTIONBAR={
@@ -116,5 +117,8 @@
                 });
             });
         }
+        bar.mousedown(function(){
+            return false;
+        });
     })
 </script>
