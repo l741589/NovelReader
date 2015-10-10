@@ -95,6 +95,7 @@
     <span id="clock"></span>
     <%@include file="/piece/ProgressBar.jsp"%>
     <%@include file="/piece/ReaderConfig.jsp"%>
+    <%@include file="/piece/LoginPanel.jsp"%>
     <script>
         ProgressBar.onScroll=function(per){
             //console.log("per:"+per);
@@ -104,6 +105,10 @@
             $("#clock").text(d.getHours()+":"+d.getMinutes());
         };
         ACTIONBAR.MENU=[
+            {
+                name:'<span id="LoginPanelEntry" style="width: 100%;display: inline-block;text-align: center;font-size: inherit">点击登录</span>',
+                action:function(){}
+            },
             {
                 name:"阅读设置",
                 action:function(){

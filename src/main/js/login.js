@@ -40,10 +40,10 @@ function login(args){
     }
 }
 
-function checkCodeLogin(args,guid){
+function checkCodeLogin(args){
     try {
-        $.log(guid);
-        var data = ZLogin.CheckCodeLogin(args.code.toString());
+        $.log(args.guid.toString());
+        var data = ZLogin.CheckCodeLogin(args.code.toString(),args.guid.toString());
         if (data.return_code == -1111)  return {data:{code:-1111,msg:"服务器错误"}}
         if (data.return_code == 8)  {
             return {
@@ -51,7 +51,7 @@ function checkCodeLogin(args,guid){
                     code:8,
                     msg:"需要验证",
                     url:data.data.checkCodeUrl,
-                    guid:ZLogin.Config.GUID
+                    guid:args.guid.toString()
                 }
             }
         }else {

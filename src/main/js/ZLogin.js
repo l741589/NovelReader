@@ -39,7 +39,7 @@ var ZLogin =
             return {"return_code": -1111, msg: "exeption occured", error: e}
         }
     },
-    CheckCodeLogin: function (code) {
+    CheckCodeLogin: function (code,guid) {
         if (code == null || code.length <= 0) {
             return {return_code: 1, msg: "pleage input checkcode"}
         }
@@ -50,7 +50,7 @@ var ZLogin =
             frametype: 3,
             endpointos: ZLogin.EndPointType,
             format: "jsonp",
-            guid: ZLogin.Config.GUID,
+            guid: guid,
             password: code
         }).exec().body()+"";
         return ZLogin.LoginCallBack(d);

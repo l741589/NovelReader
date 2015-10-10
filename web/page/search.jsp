@@ -76,6 +76,7 @@
         <tr style="height: 48px">
             <td>
                 <%@include file="/piece/LoginPanel.jsp"%>
+                <span id="LoginPanelEntry">点击登录</span>
                 <a href="/js/recent.do" style="margin-left: 16px;font-size: 20px">最近阅读</a>
             </td>
         </tr>

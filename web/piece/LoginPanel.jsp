@@ -12,7 +12,6 @@
         text-decoration:underline;
     }
 </style>
-<span id="LoginPanelEntry">点击登录</span>
 <table id="LoginPanelMask" class="hide mask">
     <tr>
         <td style="text-align: center">
