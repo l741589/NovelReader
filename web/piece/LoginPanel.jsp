@@ -70,7 +70,7 @@
                 setStatus(0);
             }else if (d.code==8){
                 setStatus(1);
-                p.find(".cc img").attr("src", d.url+"&x="+Math.random())
+                p.find(".cc img").attr("src", d.url)
                 guid= d.guid;
             }else{
                 setStatus(0);

@@ -33,7 +33,9 @@ var ZLogin =
                     password: password,
                     autologinflag: 0,
                     autologinkeeptime: ZLogin.Config.AutoDays
-                }).exec().body() + "";
+                })
+                .header({"Referer":"http://3g.qidian.com/mlogin.aspx?from=1&returnurl=http%3a%2f%2f3g.qidian.com%2fprofile%2findex.aspx%3freturnurl%3dhttp%3a%2f%2f3g.qidian.com%2f"})
+                .exec().body() + "";
             return ZLogin.LoginCallBack(d)
         } catch (e) {
             return {"return_code": -1111, msg: "exeption occured", error: e}
@@ -52,7 +54,9 @@ var ZLogin =
             format: "jsonp",
             guid: guid,
             password: code
-        }).exec().body()+"";
+        })
+        .header({"Referer":"http://3g.qidian.com/mlogin.aspx?from=1&returnurl=http%3a%2f%2f3g.qidian.com%2fprofile%2findex.aspx%3freturnurl%3dhttp%3a%2f%2f3g.qidian.com%2f"})
+        .exec().body()+"";
         return ZLogin.LoginCallBack(d);
     },
     LoginCallBack: function (a) {
